@@ -27,6 +27,14 @@ public class CourierController {
         return courierRepo.getReferenceById(id);
     }
 
+    @PostMapping("/auth")
+    public boolean authCourier(@RequestParam String login, @RequestParam String password) {
+
+        Courier courier = courierRepo.findByLoginAndPassword(login, password);
+
+        return courier != null;
+    }
+
     @PostMapping("/{id}")
     public void editCourier(@PathVariable Long id, @RequestBody Courier courier) {
 
