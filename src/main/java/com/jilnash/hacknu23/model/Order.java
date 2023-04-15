@@ -18,7 +18,8 @@ public class Order {
     @Column(name = "request_id")
     private String requestId;
 
-    private Boolean representative;
+    @Column(name = "issuing_department")
+    private String issuingDepartment;
 
     @Column(name = "client_name")
     private String clientName;
@@ -29,20 +30,29 @@ public class Order {
     @Column(name = "client_iin")
     private String clientIin;
 
-    @Column(name = "issuing_department")
-    private String issuingDepartment;
+    @Column(name = "client_phone")
+    private String clientPhone;
 
-    @Column(name = "destination_address")
-    private String destinationAddress;
+    @Column(name = "destination_street")
+    private String destinationStreet;
+
+    @Column(name = "destination_home")
+    private String destinationHome;
+
+    @Column(name = "destination_flat")
+    private String destinationFlat;
 
     private Double price;
 
     @CreationTimestamp
     private Date createdAt;
 
-    private Date deadline;
+    @Column(name = "finished_at")
+    private Date finishedAt;
 
-    private Boolean finished;
+    @ManyToOne
+    private Status status;
 
-    private Boolean accepted;
+    @ManyToOne
+    private Courier courier;
 }

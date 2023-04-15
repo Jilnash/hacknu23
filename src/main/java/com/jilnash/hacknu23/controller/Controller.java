@@ -55,6 +55,7 @@ public class Controller {
         HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
 
         Map<String, String> result = new HashMap<>();
+        System.out.println();
 
         for(String data: res.body().split(",")) {
 
@@ -68,5 +69,41 @@ public class Controller {
         }
 
         return result;
+    }
+
+    @GetMapping("/sms")
+    public void sendSms(@RequestParam String phone, @RequestParam String text) throws Exception {
+
+        String link = "http://hak-sms123.gov4c.kz/api/smsgateway/send";
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest req = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers
+                        .ofString("{\"phone\" : \"" + phone + "\", \"smsText\" : \"" + text + "\"}"))
+                .setHeader("Content-Type", "application/json")
+                .setHeader("Authorization", "Bearer " + getToken())
+                .uri(URI.create(link))
+                .build();
+
+        HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
+    }
+
+    @GetMapping("/phone/{iin}")
+    public String getPhone(@PathVariable String iin) throws Exception {
+
+        String link = "http://hakaton.gov4c.kz/api/bmg/check/" + iin;
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest req = HttpRequest.newBuilder()
+                .GET()
+                .setHeader("Authorization", "Bearer " + getToken())
+                .uri(URI.create(link))
+                .build();
+
+        HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
+
+        return res.body().split(",")[1].split(":")[1];
     }
 }
