@@ -43,4 +43,6 @@ public class Order {
     private Date deadline;
 
     private Boolean finished;
+
+    private Boolean accepted;
 }

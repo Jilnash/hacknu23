@@ -34,4 +34,16 @@ public class OrderController {
 
         orderRepo.save(order);
     }
+
+    @PostMapping("{id}/accept")
+    public void acceptOrder(@PathVariable Long id) {
+
+        Order order = orderRepo.getReferenceById(id);
+
+        order.setAccepted(true);
+
+        orderRepo.save(order);
+
+        //send sms to courier
+    }
 }

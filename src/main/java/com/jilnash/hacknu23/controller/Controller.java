@@ -5,11 +5,15 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/")
@@ -33,5 +37,36 @@ public class Controller {
         ResponseEntity<String> res = temp.postForEntity(url, entity, String.class);
 
         return JsonPath.read(res.getBody(), "$.access_token");
+    }
+
+    @GetMapping("/client/{iin}")
+    public Map<String, String> getClientInfo(@PathVariable String iin) throws Exception {
+
+        String link = "http://hakaton-fl.gov4c.kz/api/persons/" + iin;
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest req = HttpRequest.newBuilder()
+                .GET()
+                .setHeader("Authorization", "Bearer " + getToken())
+                .uri(URI.create(link))
+                .build();
+
+        HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
+
+        Map<String, String> result = new HashMap<>();
+
+        for(String data: res.body().split(",")) {
+
+            String key = data.split(":")[0];
+            key = key.substring(1, key.length()-1);
+
+            String val = data.split(":")[1];
+            val = val.substring(1, val.length()-1);
+
+            result.put(key, val);
+        }
+
+        return result;
     }
 }
