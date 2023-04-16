@@ -35,8 +35,8 @@ public class CourierController {
         return courier != null;
     }
 
-    @PostMapping("/{id}")
-    public void editCourier(@PathVariable Long id, @RequestBody Courier courier) {
+    @PostMapping
+    public void editCourier(@RequestBody Courier courier) {
 
         courierRepo.save(courier);
     }
