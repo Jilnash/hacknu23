@@ -3,6 +3,7 @@ package com.jilnash.hacknu23.controller;
 import com.jilnash.hacknu23.model.Order;
 import com.jilnash.hacknu23.repo.CourierRepo;
 import com.jilnash.hacknu23.repo.OrderRepo;
+import com.jilnash.hacknu23.repo.ServiceRepo;
 import com.jilnash.hacknu23.repo.StatusRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,9 @@ public class OrderController {
     @Autowired
     CourierRepo courierRepo;
 
+    @Autowired
+    ServiceRepo serviceRepo;
+
     @GetMapping
     public List<Order> getOrders() {
 
@@ -34,7 +38,11 @@ public class OrderController {
     }
 
     @GetMapping("/status/{id}")
-    public List<Order> getAcceptedOrders(@PathVariable Long id) {
+    public List<Order> getAcceptedOrders(@PathVariable Long id, @RequestParam(required = false) Long sid) {
+
+        if (id == 1)
+            return orderRepo.
+                    findAllByStatusAndService(statusRepo.getReferenceById(id), serviceRepo.getReferenceById(sid));
 
         return orderRepo.findAllByStatus(statusRepo.getReferenceById(id));
     }
@@ -57,7 +65,7 @@ public class OrderController {
     }
 
     @PostMapping("{id}/finish")
-    public void finishOrder(@PathVariable Long id, @PathVariable Long sid) {
+    public void finishOrder(@PathVariable Long id) {
 
         Order order = orderRepo.getReferenceById(id);
 

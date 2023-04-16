@@ -55,4 +55,7 @@ public class Order {
 
     @ManyToOne
     private Courier courier;
+
+    @ManyToOne
+    private Service service;
 }
